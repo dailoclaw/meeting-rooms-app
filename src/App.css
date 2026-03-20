@@ -34,10 +34,8 @@ body {
   pointer-events: none;
 }
 
-.svg-hotspot {
-  fill: transparent;
+area {
   cursor: pointer;
-  pointer-events: all;
 }
 
 .svg-pulse {
@@ -118,11 +116,7 @@ body {
   pointer-events: none;
 }
 
-.svg-hotspot-enlarged {
-  fill: transparent;
-  cursor: pointer;
-  pointer-events: all;
-}
+
 
 .svg-pulse-enlarged {
   fill: rgba(255, 193, 7, 0.7);
@@ -132,13 +126,7 @@ body {
   pointer-events: none;
 }
 
-.svg-label {
-  fill: white;
-  font-size: 16px;
-  font-weight: bold;
-  background: rgba(0, 0, 0, 0.8);
-  pointer-events: none;
-}
+
 
 @keyframes svgPulseEnlarged {
   0% {

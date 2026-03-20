@@ -47,67 +47,52 @@ function App() {
       {/* Floor Plan */}
       <CCard id="floor-plan">
         <CCardBody className="p-2">
-          <div 
-            className="floor-plan-container"
-            onClick={() => setShowEnlargedMap(true)}
-            style={{ cursor: 'zoom-in' }}
-          >
+          <div className="floor-plan-container">
             <div className="floor-plan-wrapper">
               <img
                 src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan"
                 className="floor-plan-image"
+                useMap="#roommap"
               />
-              <svg 
-                className="floor-plan-svg-overlay" 
-                viewBox="0 0 944 730"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                {[
-                  { id: 1, cx: 51.9, cy: 91.2 },
-                  { id: 2, cx: 523.9, cy: 62.1 },
-                  { id: 3, cx: 892.1, cy: 94.9 },
-                  { id: 4, cx: 509.8, cy: 335.8 },
-                  { id: 5, cx: 372.9, cy: 554.8 },
-                  { id: 6, cx: 467.3, cy: 554.8 },
-                  { id: 7, cx: 566.4, cy: 554.8 },
-                  { id: 8, cx: 236.0, cy: 32.9 },
-                  { id: 9, cx: 179.4, cy: 284.7 },
-                  { id: 10, cx: 188.8, cy: 365.0 },
-                  { id: 11, cx: 188.8, cy: 511.0 },
-                  { id: 12, cx: 165.2, cy: 631.5 },
-                  { id: 13, cx: 94.4, cy: 631.5 },
-                  { id: 14, cx: 618.3, cy: 310.2 },
-                  { id: 15, cx: 618.3, cy: 368.6 },
-                  { id: 16, cx: 443.7, cy: 412.4 },
-                  { id: 17, cx: 443.7, cy: 489.1 },
-                ].map((pos) => {
-                  const room = meetingRooms.find(r => r.id === pos.id)!
-                  const isActive = selectedRoom?.id === pos.id
-                  return (
-                    <g key={pos.id}>
-                      {isActive && (
-                        <circle
-                          cx={pos.cx}
-                          cy={pos.cy}
-                          r="30"
-                          className="svg-pulse"
-                        />
-                      )}
-                      <circle
-                        cx={pos.cx}
-                        cy={pos.cy}
-                        r="25"
-                        className="svg-hotspot"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleMapClick(room)
-                        }}
-                      />
-                    </g>
-                  )
-                })}
-              </svg>
+              <map name="roommap">
+                <area shape="circle" coords="52,91,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[0]) }} alt="The Hub" />
+                <area shape="circle" coords="524,62,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[1]) }} alt="The Café" />
+                <area shape="circle" coords="892,95,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[2]) }} alt="El Questro" />
+                <area shape="circle" coords="510,336,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[3]) }} alt="Rottnest Island" />
+                <area shape="circle" coords="373,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[4]) }} alt="Streaky Bay" />
+                <area shape="circle" coords="467,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[5]) }} alt="Cradle Mountain" />
+                <area shape="circle" coords="566,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[6]) }} alt="Broome" />
+                <area shape="circle" coords="236,33,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[7]) }} alt="Undara" />
+                <area shape="circle" coords="179,285,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[8]) }} alt="Pambula Beach" />
+                <area shape="circle" coords="189,365,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[9]) }} alt="Lake Hume" />
+                <area shape="circle" coords="189,511,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[10]) }} alt="Kings Canyon" />
+                <area shape="circle" coords="165,632,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[11]) }} alt="Jindabyne" />
+                <area shape="circle" coords="94,632,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[12]) }} alt="Goolwa" />
+                <area shape="circle" coords="618,310,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[13]) }} alt="Mount Isa" />
+                <area shape="circle" coords="618,369,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[14]) }} alt="Byron Bay" />
+                <area shape="circle" coords="444,412,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[15]) }} alt="Airlie Beach" />
+                <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
+              </map>
+              {selectedRoom && (
+                <svg 
+                  className="floor-plan-svg-overlay" 
+                  viewBox="0 0 944 730"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  <circle
+                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1]}
+                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1]}
+                    r="30"
+                    className="svg-pulse"
+                  />
+                </svg>
+              )}
+            </div>
+            <div className="text-center mt-2">
+              <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
+                Click map to enlarge
+              </small>
             </div>
           </div>
 
@@ -148,64 +133,41 @@ function App() {
                 src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan - Enlarged"
                 className="enlarged-map-image"
+                useMap="#roommap-enlarged"
               />
-              <svg 
-                className="enlarged-svg-overlay" 
-                viewBox="0 0 944 730"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                {[
-                  { id: 1, cx: 51.9, cy: 91.2 },
-                  { id: 2, cx: 523.9, cy: 62.1 },
-                  { id: 3, cx: 892.1, cy: 94.9 },
-                  { id: 4, cx: 509.8, cy: 335.8 },
-                  { id: 5, cx: 372.9, cy: 554.8 },
-                  { id: 6, cx: 467.3, cy: 554.8 },
-                  { id: 7, cx: 566.4, cy: 554.8 },
-                  { id: 8, cx: 236.0, cy: 32.9 },
-                  { id: 9, cx: 179.4, cy: 284.7 },
-                  { id: 10, cx: 188.8, cy: 365.0 },
-                  { id: 11, cx: 188.8, cy: 511.0 },
-                  { id: 12, cx: 165.2, cy: 631.5 },
-                  { id: 13, cx: 94.4, cy: 631.5 },
-                  { id: 14, cx: 618.3, cy: 310.2 },
-                  { id: 15, cx: 618.3, cy: 368.6 },
-                  { id: 16, cx: 443.7, cy: 412.4 },
-                  { id: 17, cx: 443.7, cy: 489.1 },
-                ].map((pos) => {
-                  const room = meetingRooms.find(r => r.id === pos.id)!
-                  const isActive = selectedRoom?.id === pos.id
-                  return (
-                    <g key={pos.id}>
-                      {isActive && (
-                        <circle
-                          cx={pos.cx}
-                          cy={pos.cy}
-                          r="40"
-                          className="svg-pulse-enlarged"
-                        />
-                      )}
-                      <circle
-                        cx={pos.cx}
-                        cy={pos.cy}
-                        r="30"
-                        className="svg-hotspot-enlarged"
-                        onClick={() => setSelectedRoom(room)}
-                      />
-                      {isActive && (
-                        <text
-                          x={pos.cx}
-                          y={pos.cy + 60}
-                          className="svg-label"
-                          textAnchor="middle"
-                        >
-                          #{room.id} {room.name}
-                        </text>
-                      )}
-                    </g>
-                  )
-                })}
-              </svg>
+              <map name="roommap-enlarged">
+                <area shape="circle" coords="52,91,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[0]) }} alt="The Hub" />
+                <area shape="circle" coords="524,62,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[1]) }} alt="The Café" />
+                <area shape="circle" coords="892,95,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[2]) }} alt="El Questro" />
+                <area shape="circle" coords="510,336,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[3]) }} alt="Rottnest Island" />
+                <area shape="circle" coords="373,555,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[4]) }} alt="Streaky Bay" />
+                <area shape="circle" coords="467,555,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[5]) }} alt="Cradle Mountain" />
+                <area shape="circle" coords="566,555,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[6]) }} alt="Broome" />
+                <area shape="circle" coords="236,33,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[7]) }} alt="Undara" />
+                <area shape="circle" coords="179,285,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[8]) }} alt="Pambula Beach" />
+                <area shape="circle" coords="189,365,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[9]) }} alt="Lake Hume" />
+                <area shape="circle" coords="189,511,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[10]) }} alt="Kings Canyon" />
+                <area shape="circle" coords="165,632,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[11]) }} alt="Jindabyne" />
+                <area shape="circle" coords="94,632,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[12]) }} alt="Goolwa" />
+                <area shape="circle" coords="618,310,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[13]) }} alt="Mount Isa" />
+                <area shape="circle" coords="618,369,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[14]) }} alt="Byron Bay" />
+                <area shape="circle" coords="444,412,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[15]) }} alt="Airlie Beach" />
+                <area shape="circle" coords="444,489,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[16]) }} alt="Bright" />
+              </map>
+              {selectedRoom && (
+                <svg 
+                  className="enlarged-svg-overlay" 
+                  viewBox="0 0 944 730"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  <circle
+                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1]}
+                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1]}
+                    r="40"
+                    className="svg-pulse-enlarged"
+                  />
+                </svg>
+              )}
             </div>
           </div>
           {selectedRoom && (
@@ -222,7 +184,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v2.0.0</small>
+        <small className="text-muted">Meeting Rooms v2.1.0</small>
       </footer>
     </CContainer>
   )
