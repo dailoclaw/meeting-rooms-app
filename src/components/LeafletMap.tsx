@@ -10,7 +10,7 @@ interface LeafletMapProps {
   enlarged?: boolean
 }
 
-// Hardcoded pixel coordinates from original map (x, y format)
+// Hardcoded pixel coordinates (x, y format)
 const roomCoordinates: Record<number, [number, number]> = {
   1: [51.9, 91.2],
   2: [523.9, 62.1],
@@ -39,55 +39,74 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return
 
+    console.log('Initializing Leaflet map...')
+
     // Image dimensions
     const w = 944
     const h = 730
 
-    // Create map with CRS.Simple
+    // Create map with CRS.Simple - IMPORTANT: minZoom must be negative enough
     const map = L.map(mapRef.current, {
       crs: L.CRS.Simple,
-      minZoom: enlarged ? -1 : -0.5,
-      maxZoom: enlarged ? 2 : 1,
+      minZoom: -2,
+      maxZoom: 2,
+      center: [h / 2, w / 2],
+      zoom: 0,
       zoomControl: enlarged,
       attributionControl: false,
-      zoomSnap: 0.1,
     })
 
-    // For CRS.Simple with images, bounds should be:
-    // [[y_bottom, x_left], [y_top, x_right]]
-    // In screen coordinates: y goes DOWN, so top=0, bottom=height
-    // But Leaflet expects geographic convention: bottom < top
-    // So we use: [[0, 0], [height, width]] where 0,0 is top-left
-    const bounds: L.LatLngBoundsExpression = [[0, 0], [h, w]]
+    console.log('Map created')
+
+    // Define bounds: [[south, west], [north, east]]
+    // For images: south=height (bottom), north=0 (top)
+    const bounds = new L.LatLngBounds(
+      [h, 0],  // bottom-left corner
+      [0, w]   // top-right corner
+    )
     
+    console.log('Bounds:', bounds)
+
     // Add image overlay
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
+    console.log('Image overlay added')
     
     // Fit map to bounds
     map.fitBounds(bounds)
-    map.setMaxBounds(bounds)
+    
+    console.log(`Adding ${rooms.length} markers...`)
 
-    // Add markers - convert pixel coordinates to Leaflet coordinates
+    // Add markers
     rooms.forEach(room => {
       const coords = roomCoordinates[room.id]
-      if (!coords) return
+      if (!coords) {
+        console.warn(`No coordinates for room ${room.id}`)
+        return
+      }
       
       const [px_x, px_y] = coords
       
-      // In CRS.Simple with our bounds [[0,0], [h,w]]:
-      // Leaflet coordinate = pixel coordinate directly
-      // Format is [lat, lng] which for images is [y, x]
-      const marker = L.circleMarker([px_y, px_x], {
+      // Convert pixel coordinates to Leaflet LatLng
+      // With bounds [[h, 0], [0, w]], we need to invert Y
+      const lat = h - px_y  // Invert Y: bottom is h, top is 0
+      const lng = px_x
+      
+      console.log(`Room ${room.id}: pixel[${px_x}, ${px_y}] -> latLng[${lat}, ${lng}]`)
+      
+      const marker = L.circleMarker([lat, lng], {
         radius: enlarged ? 20 : 15,
-        fillColor: 'rgba(255, 193, 7, 0.3)',
-        color: 'rgba(255, 193, 7, 0.8)',
+        fillColor: '#ffc107',
+        color: '#ffc107',
         weight: 2,
-        fillOpacity: 0.3,
+        fillOpacity: 0.4,
+        opacity: 0.8,
       })
       .addTo(map)
-      .on('click', () => onRoomSelect(room))
+      .on('click', (e) => {
+        L.DomEvent.stopPropagation(e)
+        onRoomSelect(room)
+      })
 
-      // Add tooltip
       marker.bindTooltip(`#${room.id} ${room.name}`, {
         permanent: false,
         direction: 'top',
@@ -97,9 +116,12 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       markersRef.current.set(room.id, marker)
     })
 
+    console.log(`Markers added: ${markersRef.current.size}`)
+
     leafletMapRef.current = map
 
     return () => {
+      console.log('Cleaning up map')
       map.remove()
       leafletMapRef.current = null
       markersRef.current.clear()
@@ -114,9 +136,10 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       const isSelected = selectedRoom?.id === roomId
       marker.setStyle({
         radius: enlarged ? (isSelected ? 25 : 20) : (isSelected ? 18 : 15),
-        fillColor: isSelected ? 'rgba(255, 193, 7, 0.7)' : 'rgba(255, 193, 7, 0.3)',
-        fillOpacity: isSelected ? 0.7 : 0.3,
+        fillColor: isSelected ? '#ffc107' : '#ffc107',
+        fillOpacity: isSelected ? 0.7 : 0.4,
         weight: isSelected ? 3 : 2,
+        opacity: isSelected ? 1 : 0.8,
       })
     })
 
@@ -125,7 +148,9 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
         const [px_x, px_y] = coords
-        leafletMapRef.current.setView([px_y, px_x], 0.5, { animate: true })
+        const lat = 730 - px_y
+        const lng = px_x
+        leafletMapRef.current.setView([lat, lng], 0, { animate: true })
       }
     }
   }, [selectedRoom, enlarged])
@@ -136,7 +161,8 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       style={{ 
         width: '100%', 
         height: enlarged ? '80vh' : '400px',
-        cursor: 'pointer'
+        backgroundColor: '#f0f0f0',
+        position: 'relative',
       }}
     />
   )
