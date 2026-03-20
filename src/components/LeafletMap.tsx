@@ -53,12 +53,18 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       zoomSnap: 0.1,
     })
 
-    // Image bounds: [[y_min, x_min], [y_max, x_max]]
-    // Leaflet uses [lat, lng] which maps to [y, x] for images
+    // Image bounds: For CRS.Simple, we need to invert Y-axis
+    // Bottom-left corner is [0, 0], top-right is [height, width]
     const bounds: L.LatLngBoundsExpression = [[0, 0], [imageHeight, imageWidth]]
     
     // Add image overlay
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
+    
+    // Transform to flip Y-axis so image appears right-side up
+    const pane = map.getPanes().overlayPane
+    if (pane) {
+      pane.style.transform = 'scaleY(-1)'
+    }
     
     // Fit map to image bounds
     map.fitBounds(bounds)
@@ -71,8 +77,11 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       
       const [x, y] = coords
       
-      // Leaflet uses [lat, lng] = [y, x]
-      const marker = L.circleMarker([y, x], {
+      // Invert Y coordinate because we flipped the overlay pane
+      const invertedY = imageHeight - y
+      
+      // Leaflet format: [lat, lng] = [y, x]
+      const marker = L.circleMarker([invertedY, x], {
         radius: enlarged ? 20 : 15,
         fillColor: 'rgba(255, 193, 7, 0.3)',
         color: 'rgba(255, 193, 7, 0.8)',
@@ -120,7 +129,8 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
         const [x, y] = coords
-        leafletMapRef.current.setView([y, x], 0.5, { animate: true })
+        const invertedY = 730 - y
+        leafletMapRef.current.setView([invertedY, x], 0.5, { animate: true })
       }
     }
   }, [selectedRoom, enlarged])
