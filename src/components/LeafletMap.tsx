@@ -51,9 +51,12 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       minZoom: -2,
       maxZoom: 2,
       center: [h / 2, w / 2],
-      zoom: 0,
+      zoom: enlarged ? 0.5 : 0,
       zoomControl: enlarged,
       attributionControl: false,
+      scrollWheelZoom: enlarged,
+      doubleClickZoom: enlarged,
+      touchZoom: enlarged,
     })
 
     console.log('Map created')
@@ -71,8 +74,11 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
     console.log('Image overlay added')
     
-    // Fit map to bounds
+    // Fit map to bounds initially
     map.fitBounds(bounds)
+    
+    // Set max bounds to prevent panning outside image
+    map.setMaxBounds(bounds.pad(0.1))
     
     console.log(`Adding ${rooms.length} markers...`)
 
@@ -143,7 +149,7 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       })
     })
 
-    // Pan to selected room
+    // Pan to selected room (only on main map, not enlarged)
     if (selectedRoom && !enlarged) {
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
@@ -151,6 +157,17 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
         const lat = 730 - px_y
         const lng = px_x
         leafletMapRef.current.setView([lat, lng], 0, { animate: true })
+      }
+    }
+    // On enlarged map, just pan without changing zoom
+    if (selectedRoom && enlarged) {
+      const coords = roomCoordinates[selectedRoom.id]
+      if (coords) {
+        const [px_x, px_y] = coords
+        const lat = 730 - px_y
+        const lng = px_x
+        const currentZoom = leafletMapRef.current.getZoom()
+        leafletMapRef.current.setView([lat, lng], currentZoom, { animate: true })
       }
     }
   }, [selectedRoom, enlarged])
