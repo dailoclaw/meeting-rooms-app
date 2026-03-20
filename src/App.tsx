@@ -9,6 +9,7 @@ import './App.css'
 function App() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null)
   const [showEnlargedMap, setShowEnlargedMap] = useState(false)
+  const [mainZoom, setMainZoom] = useState(1)
   const [enlargedScale, setEnlargedScale] = useState(1.5)
   const [enlargedPosition, setEnlargedPosition] = useState({ x: 0, y: 0 })
   const [isPanning, setIsPanning] = useState(false)
@@ -118,6 +119,29 @@ function App() {
       {/* Floor Plan */}
       <CCard id="floor-plan">
         <CCardBody className="p-2">
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            <div className="d-flex align-items-center">
+              <label className="me-2 mb-0 small">Zoom:</label>
+              <input 
+                type="range" 
+                min="1" 
+                max="3" 
+                step="0.1" 
+                value={selectedRoom ? 2.5 : mainZoom}
+                onChange={(e) => {
+                  if (!selectedRoom) {
+                    setMainZoom(parseFloat(e.target.value))
+                  }
+                }}
+                className="zoom-slider-small"
+                disabled={!!selectedRoom}
+              />
+              <span className="ms-2 small">{selectedRoom ? '2.5x' : mainZoom.toFixed(1) + 'x'}</span>
+            </div>
+            <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
+              Click to enlarge
+            </small>
+          </div>
           <div className="floor-plan-container">
             <div 
               className="floor-plan-wrapper"
@@ -126,7 +150,9 @@ function App() {
                 transformOrigin: `${meetingRooms.find(r => r.id === selectedRoom.id)?.x}% ${meetingRooms.find(r => r.id === selectedRoom.id)?.y}%`,
                 transition: 'transform 0.5s ease-in-out'
               } : {
-                transition: 'transform 0.5s ease-in-out'
+                transform: `scale(${mainZoom})`,
+                transformOrigin: 'center center',
+                transition: 'transform 0.3s ease-in-out'
               }}
             >
               <img
@@ -156,11 +182,6 @@ function App() {
                 <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
               </map>
 
-            </div>
-            <div className="text-center mt-2">
-              <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
-                Click map to enlarge
-              </small>
             </div>
           </div>
 
@@ -270,7 +291,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.2.0</small>
+        <small className="text-muted">Meeting Rooms v3.2.1</small>
       </footer>
     </CContainer>
   )

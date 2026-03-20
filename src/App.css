@@ -67,6 +67,11 @@ area {
   accent-color: #0d6efd;
 }
 
+.zoom-slider-small {
+  width: 120px;
+  accent-color: #0d6efd;
+}
+
 .enlarged-map-container {
   position: relative;
   width: 100%;
