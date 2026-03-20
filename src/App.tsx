@@ -58,23 +58,56 @@ function App() {
                 alt="Meeting Rooms Floor Plan"
                 className="floor-plan-image"
               />
-              {meetingRooms.map(room => (
-                <div
-                  key={room.id}
-                  className={`room-marker ${selectedRoom?.id === room.id ? 'active' : ''}`}
-                  style={{
-                    left: `${room.x}%`,
-                    top: `${room.y}%`,
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleMapClick(room)
-                  }}
-                >
-                  <div className="room-marker-pulse" />
-                  <div className="room-marker-circle"></div>
-                </div>
-              ))}
+              <svg 
+                className="floor-plan-svg-overlay" 
+                viewBox="0 0 944 730"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                {[
+                  { id: 1, cx: 51.9, cy: 91.2 },
+                  { id: 2, cx: 523.9, cy: 62.1 },
+                  { id: 3, cx: 892.1, cy: 94.9 },
+                  { id: 4, cx: 509.8, cy: 335.8 },
+                  { id: 5, cx: 372.9, cy: 554.8 },
+                  { id: 6, cx: 467.3, cy: 554.8 },
+                  { id: 7, cx: 566.4, cy: 554.8 },
+                  { id: 8, cx: 236.0, cy: 32.9 },
+                  { id: 9, cx: 179.4, cy: 284.7 },
+                  { id: 10, cx: 188.8, cy: 365.0 },
+                  { id: 11, cx: 188.8, cy: 511.0 },
+                  { id: 12, cx: 165.2, cy: 631.5 },
+                  { id: 13, cx: 94.4, cy: 631.5 },
+                  { id: 14, cx: 618.3, cy: 310.2 },
+                  { id: 15, cx: 618.3, cy: 368.6 },
+                  { id: 16, cx: 443.7, cy: 412.4 },
+                  { id: 17, cx: 443.7, cy: 489.1 },
+                ].map((pos) => {
+                  const room = meetingRooms.find(r => r.id === pos.id)!
+                  const isActive = selectedRoom?.id === pos.id
+                  return (
+                    <g key={pos.id}>
+                      {isActive && (
+                        <circle
+                          cx={pos.cx}
+                          cy={pos.cy}
+                          r="30"
+                          className="svg-pulse"
+                        />
+                      )}
+                      <circle
+                        cx={pos.cx}
+                        cy={pos.cy}
+                        r="25"
+                        className="svg-hotspot"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleMapClick(room)
+                        }}
+                      />
+                    </g>
+                  )
+                })}
+              </svg>
             </div>
           </div>
 
@@ -110,28 +143,70 @@ function App() {
         </CModalHeader>
         <CModalBody className="p-0 bg-dark">
           <div className="enlarged-map-container">
-            <img
-              src="/meeting-rooms-map.jpg"
-              alt="Meeting Rooms Floor Plan - Enlarged"
-              className="enlarged-map-image"
-            />
-            {meetingRooms.map(room => (
-              <div
-                key={room.id}
-                className={`room-marker enlarged ${selectedRoom?.id === room.id ? 'active' : ''}`}
-                style={{
-                  left: `${room.x}%`,
-                  top: `${room.y}%`,
-                }}
-                onClick={() => {
-                  setSelectedRoom(room)
-                }}
+            <div className="enlarged-map-wrapper">
+              <img
+                src="/meeting-rooms-map.jpg"
+                alt="Meeting Rooms Floor Plan - Enlarged"
+                className="enlarged-map-image"
+              />
+              <svg 
+                className="enlarged-svg-overlay" 
+                viewBox="0 0 944 730"
+                preserveAspectRatio="xMidYMid meet"
               >
-                <div className="room-marker-pulse" />
-                <div className="room-marker-circle"></div>
-                <div className="room-marker-label">#{room.id} {room.name}</div>
-              </div>
-            ))}
+                {[
+                  { id: 1, cx: 51.9, cy: 91.2 },
+                  { id: 2, cx: 523.9, cy: 62.1 },
+                  { id: 3, cx: 892.1, cy: 94.9 },
+                  { id: 4, cx: 509.8, cy: 335.8 },
+                  { id: 5, cx: 372.9, cy: 554.8 },
+                  { id: 6, cx: 467.3, cy: 554.8 },
+                  { id: 7, cx: 566.4, cy: 554.8 },
+                  { id: 8, cx: 236.0, cy: 32.9 },
+                  { id: 9, cx: 179.4, cy: 284.7 },
+                  { id: 10, cx: 188.8, cy: 365.0 },
+                  { id: 11, cx: 188.8, cy: 511.0 },
+                  { id: 12, cx: 165.2, cy: 631.5 },
+                  { id: 13, cx: 94.4, cy: 631.5 },
+                  { id: 14, cx: 618.3, cy: 310.2 },
+                  { id: 15, cx: 618.3, cy: 368.6 },
+                  { id: 16, cx: 443.7, cy: 412.4 },
+                  { id: 17, cx: 443.7, cy: 489.1 },
+                ].map((pos) => {
+                  const room = meetingRooms.find(r => r.id === pos.id)!
+                  const isActive = selectedRoom?.id === pos.id
+                  return (
+                    <g key={pos.id}>
+                      {isActive && (
+                        <circle
+                          cx={pos.cx}
+                          cy={pos.cy}
+                          r="40"
+                          className="svg-pulse-enlarged"
+                        />
+                      )}
+                      <circle
+                        cx={pos.cx}
+                        cy={pos.cy}
+                        r="30"
+                        className="svg-hotspot-enlarged"
+                        onClick={() => setSelectedRoom(room)}
+                      />
+                      {isActive && (
+                        <text
+                          x={pos.cx}
+                          y={pos.cy + 60}
+                          className="svg-label"
+                          textAnchor="middle"
+                        >
+                          #{room.id} {room.name}
+                        </text>
+                      )}
+                    </g>
+                  )
+                })}
+              </svg>
+            </div>
           </div>
           {selectedRoom && (
             <div className="enlarged-room-info">
@@ -147,7 +222,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v1.2.1</small>
+        <small className="text-muted">Meeting Rooms v2.0.0</small>
       </footer>
     </CContainer>
   )

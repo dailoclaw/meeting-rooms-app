@@ -25,57 +25,45 @@ body {
   max-width: 100%;
 }
 
-.room-marker {
+.floor-plan-svg-overlay {
   position: absolute;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.svg-hotspot {
+  fill: transparent;
   cursor: pointer;
-  z-index: 10;
   pointer-events: all;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.room-marker-pulse {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: rgba(255, 193, 7, 0.7);
-  border: 3px solid rgba(255, 193, 7, 0.9);
-  opacity: 0;
+.svg-pulse {
+  fill: rgba(255, 193, 7, 0.7);
+  stroke: rgba(255, 193, 7, 0.9);
+  stroke-width: 3;
+  animation: svgPulse 1.5s ease-in-out infinite;
   pointer-events: none;
 }
 
-.room-marker.active .room-marker-pulse {
-  opacity: 1;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.room-marker-circle {
-  position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-}
-
-@keyframes pulse {
+@keyframes svgPulse {
   0% {
-    transform: translate(-50%, -50%) scale(0.8);
+    r: 25;
     opacity: 1;
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.3);
+    r: 35;
     opacity: 0.6;
   }
   100% {
-    transform: translate(-50%, -50%) scale(1.8);
+    r: 45;
     opacity: 0;
   }
 }
+
+
 
 .selected-room-info {
   animation: fadeIn 0.3s ease-in;
@@ -108,13 +96,63 @@ body {
   justify-content: center;
 }
 
-.enlarged-map-image {
-  max-width: none;
+.enlarged-map-wrapper {
+  position: relative;
   width: 150%;
+}
+
+.enlarged-map-image {
+  width: 100%;
   height: auto;
   display: block;
   touch-action: pan-x pan-y pinch-zoom;
   user-select: none;
+}
+
+.enlarged-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.svg-hotspot-enlarged {
+  fill: transparent;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.svg-pulse-enlarged {
+  fill: rgba(255, 193, 7, 0.7);
+  stroke: rgba(255, 193, 7, 0.9);
+  stroke-width: 4;
+  animation: svgPulseEnlarged 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.svg-label {
+  fill: white;
+  font-size: 16px;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+@keyframes svgPulseEnlarged {
+  0% {
+    r: 30;
+    opacity: 1;
+  }
+  50% {
+    r: 45;
+    opacity: 0.6;
+  }
+  100% {
+    r: 60;
+    opacity: 0;
+  }
 }
 
 .enlarged-room-info {
@@ -139,27 +177,7 @@ body {
   }
 }
 
-.room-marker.enlarged .room-marker-label {
-  display: block;
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
 
-.room-marker.enlarged:hover .room-marker-label,
-.room-marker.enlarged.active .room-marker-label {
-  opacity: 1;
-}
 
 .room-name {
   white-space: nowrap;
@@ -170,25 +188,8 @@ body {
 
 /* Mobile optimization */
 @media (max-width: 576px) {
-  .room-marker-circle {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-    border-width: 2px;
-  }
-
-  .room-marker-pulse {
-    width: 50px;
-    height: 50px;
-  }
-
-  .enlarged-map-image {
+  .enlarged-map-wrapper {
     width: 200%;
-  }
-
-  .room-marker.enlarged .room-marker-label {
-    display: block;
-    opacity: 1;
   }
 
   .room-name {
