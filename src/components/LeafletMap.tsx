@@ -44,8 +44,12 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     map.setMaxBounds(bounds)
 
     // Add markers for each room
+    // Convert percentage coordinates to pixel coordinates
     rooms.forEach(room => {
-      const marker = L.circleMarker([room.y, room.x], {
+      const pixelX = (room.x / 100) * imageWidth
+      const pixelY = (room.y / 100) * imageHeight
+      
+      const marker = L.circleMarker([pixelY, pixelX], {
         radius: enlarged ? 20 : 15,
         fillColor: 'rgba(255, 193, 7, 0.3)',
         color: 'rgba(255, 193, 7, 0.8)',
