@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CContainer, CCard, CCardBody, CButton, CModal, CModalBody, CModalHeader } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPeople, cilZoomIn, cilX } from '@coreui/icons'
+import { cilPeople, cilX } from '@coreui/icons'
 import { meetingRooms, type MeetingRoom } from './data/meetingRooms'
 import './App.css'
 
@@ -21,8 +21,8 @@ function App() {
 
   return (
     <CContainer className="py-3">
-      <div className="mb-3">
-        <h2 className="mb-0">Meeting Rooms</h2>
+      <div className="mb-3 text-center">
+        <h2 className="mb-0 text-dark">Meeting Rooms</h2>
       </div>
 
       {/* Room List */}
@@ -33,7 +33,7 @@ function App() {
               <div key={room.id} className="col-6">
                 <div
                   onClick={() => handleRoomClick(room)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', textAlign: 'left' }}
                   className={`p-2 rounded ${selectedRoom?.id === room.id ? 'bg-primary text-white' : 'bg-light'}`}
                 >
                   <strong>#{room.id} {room.name}</strong>
@@ -47,20 +47,10 @@ function App() {
       {/* Floor Plan */}
       <CCard id="floor-plan">
         <CCardBody className="p-2">
-          <div className="d-flex justify-content-end mb-2">
-            <CButton
-              color="primary"
-              size="sm"
-              onClick={() => setShowEnlargedMap(true)}
-            >
-              <CIcon icon={cilZoomIn} className="me-1" />
-              Enlarge Map
-            </CButton>
-          </div>
           <div 
             className="floor-plan-container"
             onClick={() => setShowEnlargedMap(true)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'zoom-in' }}
           >
             <div className="floor-plan-wrapper">
               <img
@@ -154,6 +144,11 @@ function App() {
           )}
         </CModalBody>
       </CModal>
+
+      {/* Footer */}
+      <footer className="text-center mt-4 pb-3">
+        <small className="text-muted">Meeting Rooms v1.2.0</small>
+      </footer>
     </CContainer>
   )
 }
