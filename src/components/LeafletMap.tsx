@@ -64,7 +64,8 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     
     // Fit map to bounds
     map.fitBounds(bounds)
-    map.setMaxBounds(bounds.pad(0.1))
+    const maxBounds = new L.LatLngBounds([[0, 0], [h, w]]).pad(0.1)
+    map.setMaxBounds(maxBounds)
 
     // Add markers - use pixel coordinates directly
     rooms.forEach(room => {
