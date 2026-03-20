@@ -142,7 +142,11 @@ function App() {
               Click to enlarge
             </small>
           </div>
-          <div className="floor-plan-container">
+          <div 
+            className="floor-plan-container"
+            onClick={() => setShowEnlargedMap(true)}
+            style={{ cursor: 'zoom-in' }}
+          >
             <div 
               className="floor-plan-wrapper"
               style={selectedRoom ? {
@@ -163,23 +167,23 @@ function App() {
                 useMap="#roommap"
               />
               <map name="roommap">
-                <area shape="circle" coords="52,91,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[0]) }} alt="The Hub" />
-                <area shape="circle" coords="524,62,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[1]) }} alt="The Café" />
-                <area shape="circle" coords="892,95,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[2]) }} alt="El Questro" />
-                <area shape="circle" coords="510,336,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[3]) }} alt="Rottnest Island" />
-                <area shape="circle" coords="373,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[4]) }} alt="Streaky Bay" />
-                <area shape="circle" coords="467,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[5]) }} alt="Cradle Mountain" />
-                <area shape="circle" coords="566,555,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[6]) }} alt="Broome" />
-                <area shape="circle" coords="236,33,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[7]) }} alt="Undara" />
-                <area shape="circle" coords="179,285,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[8]) }} alt="Pambula Beach" />
-                <area shape="circle" coords="189,365,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[9]) }} alt="Lake Hume" />
-                <area shape="circle" coords="189,511,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[10]) }} alt="Kings Canyon" />
-                <area shape="circle" coords="165,632,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[11]) }} alt="Jindabyne" />
-                <area shape="circle" coords="94,632,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[12]) }} alt="Goolwa" />
-                <area shape="circle" coords="618,310,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[13]) }} alt="Mount Isa" />
-                <area shape="circle" coords="618,369,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[14]) }} alt="Byron Bay" />
-                <area shape="circle" coords="444,412,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[15]) }} alt="Airlie Beach" />
-                <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
+                <area shape="circle" coords="52,91,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[0]) }} alt="The Hub" />
+                <area shape="circle" coords="524,62,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[1]) }} alt="The Café" />
+                <area shape="circle" coords="892,95,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[2]) }} alt="El Questro" />
+                <area shape="circle" coords="510,336,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[3]) }} alt="Rottnest Island" />
+                <area shape="circle" coords="373,555,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[4]) }} alt="Streaky Bay" />
+                <area shape="circle" coords="467,555,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[5]) }} alt="Cradle Mountain" />
+                <area shape="circle" coords="566,555,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[6]) }} alt="Broome" />
+                <area shape="circle" coords="236,33,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[7]) }} alt="Undara" />
+                <area shape="circle" coords="179,285,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[8]) }} alt="Pambula Beach" />
+                <area shape="circle" coords="189,365,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[9]) }} alt="Lake Hume" />
+                <area shape="circle" coords="189,511,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[10]) }} alt="Kings Canyon" />
+                <area shape="circle" coords="165,632,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[11]) }} alt="Jindabyne" />
+                <area shape="circle" coords="94,632,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[12]) }} alt="Goolwa" />
+                <area shape="circle" coords="618,310,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[13]) }} alt="Mount Isa" />
+                <area shape="circle" coords="618,369,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[14]) }} alt="Byron Bay" />
+                <area shape="circle" coords="444,412,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[15]) }} alt="Airlie Beach" />
+                <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
               </map>
 
             </div>
@@ -291,7 +295,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.2.1</small>
+        <small className="text-muted">Meeting Rooms v3.2.2</small>
       </footer>
     </CContainer>
   )
