@@ -39,19 +39,15 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return
 
-    console.log('Initializing Leaflet map...')
-
     // Image dimensions
     const w = 944
     const h = 730
 
-    // Create map with CRS.Simple - IMPORTANT: minZoom must be negative enough
+    // Create map with CRS.Simple
     const map = L.map(mapRef.current, {
       crs: L.CRS.Simple,
       minZoom: -2,
       maxZoom: 2,
-      center: [h / 2, w / 2],
-      zoom: enlarged ? 0.5 : 0,
       zoomControl: enlarged,
       attributionControl: false,
       scrollWheelZoom: enlarged,
@@ -59,47 +55,26 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       touchZoom: enlarged,
     })
 
-    console.log('Map created')
-
-    // Define bounds: [[south, west], [north, east]]
-    // For images: south=height (bottom), north=0 (top)
-    const bounds = new L.LatLngBounds(
-      [h, 0],  // bottom-left corner
-      [0, w]   // top-right corner
-    )
+    // Bounds: [[y_min, x_min], [y_max, x_max]]
+    // For CRS.Simple with images: top-left is [0, 0], bottom-right is [height, width]
+    const bounds: L.LatLngBoundsExpression = [[0, 0], [h, w]]
     
-    console.log('Bounds:', bounds)
-
     // Add image overlay
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
-    console.log('Image overlay added')
     
-    // Fit map to bounds initially
+    // Fit map to bounds
     map.fitBounds(bounds)
-    
-    // Set max bounds to prevent panning outside image
     map.setMaxBounds(bounds.pad(0.1))
-    
-    console.log(`Adding ${rooms.length} markers...`)
 
-    // Add markers
+    // Add markers - use pixel coordinates directly
     rooms.forEach(room => {
       const coords = roomCoordinates[room.id]
-      if (!coords) {
-        console.warn(`No coordinates for room ${room.id}`)
-        return
-      }
+      if (!coords) return
       
       const [px_x, px_y] = coords
       
-      // Convert pixel coordinates to Leaflet LatLng
-      // With bounds [[h, 0], [0, w]], we need to invert Y
-      const lat = h - px_y  // Invert Y: bottom is h, top is 0
-      const lng = px_x
-      
-      console.log(`Room ${room.id}: pixel[${px_x}, ${px_y}] -> latLng[${lat}, ${lng}]`)
-      
-      const marker = L.circleMarker([lat, lng], {
+      // In CRS.Simple, coordinates map directly: [y, x]
+      const marker = L.circleMarker([px_y, px_x], {
         radius: enlarged ? 20 : 15,
         fillColor: '#ffc107',
         color: '#ffc107',
@@ -122,12 +97,9 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       markersRef.current.set(room.id, marker)
     })
 
-    console.log(`Markers added: ${markersRef.current.size}`)
-
     leafletMapRef.current = map
 
     return () => {
-      console.log('Cleaning up map')
       map.remove()
       leafletMapRef.current = null
       markersRef.current.clear()
@@ -154,21 +126,17 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
         const [px_x, px_y] = coords
-        const lat = 730 - px_y
-        const lng = px_x
         
         if (enlarged) {
-          // On enlarged view, zoom in to 0.8x
-          leafletMapRef.current.setView([lat, lng], 0.8, { animate: true })
+          leafletMapRef.current.setView([px_y, px_x], 0.8, { animate: true })
         } else {
-          // On main view, zoom in to 0.3x
-          leafletMapRef.current.setView([lat, lng], 0.3, { animate: true })
+          leafletMapRef.current.setView([px_y, px_x], 0.3, { animate: true })
         }
       }
     } else {
       // No room selected - zoom back out to fit bounds
       if (leafletMapRef.current) {
-        const bounds = new L.LatLngBounds([730, 0], [0, 944])
+        const bounds: L.LatLngBoundsExpression = [[0, 0], [730, 944]]
         leafletMapRef.current.fitBounds(bounds)
       }
     }
