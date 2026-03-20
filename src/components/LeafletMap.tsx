@@ -10,7 +10,7 @@ interface LeafletMapProps {
   enlarged?: boolean
 }
 
-// Hardcoded pixel coordinates from original map
+// Hardcoded pixel coordinates from original map (x, y format)
 const roomCoordinates: Record<number, [number, number]> = {
   1: [51.9, 91.2],
   2: [523.9, 62.1],
@@ -40,10 +40,10 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     if (!mapRef.current || leafletMapRef.current) return
 
     // Image dimensions
-    const imageWidth = 944
-    const imageHeight = 730
+    const w = 944
+    const h = 730
 
-    // Create map with CRS.Simple and image bounds
+    // Create map with CRS.Simple
     const map = L.map(mapRef.current, {
       crs: L.CRS.Simple,
       minZoom: enlarged ? -1 : -0.5,
@@ -53,35 +53,31 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       zoomSnap: 0.1,
     })
 
-    // Image bounds: For CRS.Simple, we need to invert Y-axis
-    // Bottom-left corner is [0, 0], top-right is [height, width]
-    const bounds: L.LatLngBoundsExpression = [[0, 0], [imageHeight, imageWidth]]
+    // For CRS.Simple with images, bounds should be:
+    // [[y_bottom, x_left], [y_top, x_right]]
+    // In screen coordinates: y goes DOWN, so top=0, bottom=height
+    // But Leaflet expects geographic convention: bottom < top
+    // So we use: [[0, 0], [height, width]] where 0,0 is top-left
+    const bounds: L.LatLngBoundsExpression = [[0, 0], [h, w]]
     
     // Add image overlay
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
     
-    // Transform to flip Y-axis so image appears right-side up
-    const pane = map.getPanes().overlayPane
-    if (pane) {
-      pane.style.transform = 'scaleY(-1)'
-    }
-    
-    // Fit map to image bounds
+    // Fit map to bounds
     map.fitBounds(bounds)
-    map.setMaxBounds(bounds.map(b => [b[0] - 50, b[1] - 50]) as L.LatLngBoundsExpression)
+    map.setMaxBounds(bounds)
 
-    // Add markers for each room using hardcoded coordinates
+    // Add markers - convert pixel coordinates to Leaflet coordinates
     rooms.forEach(room => {
       const coords = roomCoordinates[room.id]
       if (!coords) return
       
-      const [x, y] = coords
+      const [px_x, px_y] = coords
       
-      // Invert Y coordinate because we flipped the overlay pane
-      const invertedY = imageHeight - y
-      
-      // Leaflet format: [lat, lng] = [y, x]
-      const marker = L.circleMarker([invertedY, x], {
+      // In CRS.Simple with our bounds [[0,0], [h,w]]:
+      // Leaflet coordinate = pixel coordinate directly
+      // Format is [lat, lng] which for images is [y, x]
+      const marker = L.circleMarker([px_y, px_x], {
         radius: enlarged ? 20 : 15,
         fillColor: 'rgba(255, 193, 7, 0.3)',
         color: 'rgba(255, 193, 7, 0.8)',
@@ -128,9 +124,8 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     if (selectedRoom && !enlarged) {
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
-        const [x, y] = coords
-        const invertedY = 730 - y
-        leafletMapRef.current.setView([invertedY, x], 0.5, { animate: true })
+        const [px_x, px_y] = coords
+        leafletMapRef.current.setView([px_y, px_x], 0.5, { animate: true })
       }
     }
   }, [selectedRoom, enlarged])
