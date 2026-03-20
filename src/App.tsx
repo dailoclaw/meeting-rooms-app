@@ -36,7 +36,7 @@ function App() {
                   style={{ cursor: 'pointer', textAlign: 'left' }}
                   className={`p-2 rounded ${selectedRoom?.id === room.id ? 'bg-primary text-white' : 'bg-light'}`}
                 >
-                  <strong>#{room.id} {room.name}</strong>
+                  <strong className="room-name">#{room.id} {room.name}</strong>
                 </div>
               </div>
             ))}
@@ -147,7 +147,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v1.2.0</small>
+        <small className="text-muted">Meeting Rooms v1.2.1</small>
       </footer>
     </CContainer>
   )

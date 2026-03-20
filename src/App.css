@@ -161,6 +161,13 @@ body {
   opacity: 1;
 }
 
+.room-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+}
+
 /* Mobile optimization */
 @media (max-width: 576px) {
   .room-marker-circle {
@@ -182,5 +189,9 @@ body {
   .room-marker.enlarged .room-marker-label {
     display: block;
     opacity: 1;
+  }
+
+  .room-name {
+    font-size: 0.85rem;
   }
 }
