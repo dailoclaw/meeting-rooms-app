@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# Meeting Rooms App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive meeting rooms floor plan application.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🗺️ **Interactive Floor Plan** - Visual map with all 17 meeting rooms
+- 🔍 **Search** - Quickly find rooms by name
+- 📋 **2-Column Layout** - Compact room list
+- ✨ **Pulse Animations** - Visual feedback on room selection
+- 🔎 **Enlarge Map** - Fullscreen view with pinch-zoom support
+- 📱 **Mobile Optimized** - Touch-friendly interface for iOS/Android
+- 🌙 **Dark Theme** - Easy on the eyes
 
-## React Compiler
+## Meeting Rooms
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. The Hub (60 people)
+2. The Café (70 people)
+3. El Questro (19 people)
+4. Rottnest Island (16 people)
+5. Streaky Bay (7 people)
+6. Cradle Mountain (7 people)
+7. Broome (7 people)
+8. Undara (11 people)
+9. Pambula Beach (5 people)
+10. Lake Hume (5 people)
+11. Kings Canyon (9 people)
+12. Jindabyne (5 people)
+13. Goolwa (5 people)
+14. Mount Isa (3 people)
+15. Byron Bay (3 people)
+16. Airlie Beach (3 people)
+17. Bright (3 people)
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React + TypeScript
+- Vite
+- CoreUI React
+- CSS Animations
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+## Deploy
+
+Deploy to Vercel, Netlify, or any static hosting service.
