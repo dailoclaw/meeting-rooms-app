@@ -1,13 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { CContainer, CCard, CCardBody, CButton, CModal, CModalBody, CModalHeader } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPeople, cilX } from '@coreui/icons'
 import { meetingRooms, type MeetingRoom } from './data/meetingRooms'
+import imageMapResize from 'image-map-resizer'
 import './App.css'
 
 function App() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null)
   const [showEnlargedMap, setShowEnlargedMap] = useState(false)
+  const [imageScale, setImageScale] = useState(1)
+  const mapRef = useRef<HTMLImageElement>(null)
+  const enlargedMapRef = useRef<HTMLImageElement>(null)
+  
+  useEffect(() => {
+    // Initialize image map resizer for main map
+    if (mapRef.current) {
+      imageMapResize()
+      updateImageScale()
+    }
+    
+    // Listen for resize
+    const handleResize = () => {
+      imageMapResize()
+      updateImageScale()
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+  
+  useEffect(() => {
+    // Initialize image map resizer for enlarged map
+    if (showEnlargedMap && enlargedMapRef.current) {
+      setTimeout(() => {
+        imageMapResize()
+        updateImageScale()
+      }, 100)
+    }
+  }, [showEnlargedMap])
+  
+  const updateImageScale = () => {
+    if (mapRef.current) {
+      const scale = mapRef.current.offsetWidth / 944 // 944 = original width
+      setImageScale(scale)
+    }
+  }
 
   const handleRoomClick = (room: MeetingRoom) => {
     setSelectedRoom(room)
@@ -50,6 +87,7 @@ function App() {
           <div className="floor-plan-container">
             <div className="floor-plan-wrapper">
               <img
+                ref={mapRef}
                 src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan"
                 className="floor-plan-image"
@@ -74,16 +112,17 @@ function App() {
                 <area shape="circle" coords="444,412,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[15]) }} alt="Airlie Beach" />
                 <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
               </map>
-              {selectedRoom && (
+              {selectedRoom && mapRef.current && (
                 <svg 
                   className="floor-plan-svg-overlay" 
-                  viewBox="0 0 944 730"
+                  viewBox={`0 0 ${mapRef.current.offsetWidth} ${mapRef.current.offsetHeight}`}
                   preserveAspectRatio="xMidYMid meet"
+                  style={{ width: mapRef.current.offsetWidth, height: mapRef.current.offsetHeight }}
                 >
                   <circle
-                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1]}
-                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1]}
-                    r="30"
+                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1] * imageScale}
+                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1] * imageScale}
+                    r={30 * imageScale}
                     className="svg-pulse"
                   />
                 </svg>
@@ -130,6 +169,7 @@ function App() {
           <div className="enlarged-map-container">
             <div className="enlarged-map-wrapper">
               <img
+                ref={enlargedMapRef}
                 src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan - Enlarged"
                 className="enlarged-map-image"
@@ -154,16 +194,17 @@ function App() {
                 <area shape="circle" coords="444,412,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[15]) }} alt="Airlie Beach" />
                 <area shape="circle" coords="444,489,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[16]) }} alt="Bright" />
               </map>
-              {selectedRoom && (
+              {selectedRoom && enlargedMapRef.current && (
                 <svg 
                   className="enlarged-svg-overlay" 
-                  viewBox="0 0 944 730"
+                  viewBox={`0 0 ${enlargedMapRef.current.offsetWidth} ${enlargedMapRef.current.offsetHeight}`}
                   preserveAspectRatio="xMidYMid meet"
+                  style={{ width: enlargedMapRef.current.offsetWidth, height: enlargedMapRef.current.offsetHeight }}
                 >
                   <circle
-                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1]}
-                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1]}
-                    r="40"
+                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1] * (enlargedMapRef.current.offsetWidth / 944)}
+                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1] * (enlargedMapRef.current.offsetHeight / 730)}
+                    r={40 * (enlargedMapRef.current.offsetWidth / 944)}
                     className="svg-pulse-enlarged"
                   />
                 </svg>
@@ -184,7 +225,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v2.1.0</small>
+        <small className="text-muted">Meeting Rooms v2.2.0</small>
       </footer>
     </CContainer>
   )
