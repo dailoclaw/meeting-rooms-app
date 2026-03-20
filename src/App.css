@@ -25,40 +25,8 @@ body {
   max-width: 100%;
 }
 
-.floor-plan-svg-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
 area {
   cursor: pointer;
-}
-
-.svg-pulse {
-  fill: rgba(255, 193, 7, 0.7);
-  stroke: rgba(255, 193, 7, 0.9);
-  stroke-width: 3;
-  animation: svgPulse 1.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes svgPulse {
-  0% {
-    r: 25;
-    opacity: 1;
-  }
-  50% {
-    r: 35;
-    opacity: 0.6;
-  }
-  100% {
-    r: 45;
-    opacity: 0;
-  }
 }
 
 
@@ -107,41 +75,7 @@ area {
   user-select: none;
 }
 
-.enlarged-svg-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
 
-
-
-.svg-pulse-enlarged {
-  fill: rgba(255, 193, 7, 0.7);
-  stroke: rgba(255, 193, 7, 0.9);
-  stroke-width: 4;
-  animation: svgPulseEnlarged 1.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-
-
-@keyframes svgPulseEnlarged {
-  0% {
-    r: 30;
-    opacity: 1;
-  }
-  50% {
-    r: 45;
-    opacity: 0.6;
-  }
-  100% {
-    r: 60;
-    opacity: 0;
-  }
-}
 
 .enlarged-room-info {
   position: fixed;

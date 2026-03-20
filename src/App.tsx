@@ -9,42 +9,20 @@ import './App.css'
 function App() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null)
   const [showEnlargedMap, setShowEnlargedMap] = useState(false)
-  const [imageScale, setImageScale] = useState(1)
   const mapRef = useRef<HTMLImageElement>(null)
   const enlargedMapRef = useRef<HTMLImageElement>(null)
   
   useEffect(() => {
-    // Initialize image map resizer for main map
-    if (mapRef.current) {
-      imageMapResize()
-      updateImageScale()
-    }
-    
-    // Listen for resize
-    const handleResize = () => {
-      imageMapResize()
-      updateImageScale()
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    imageMapResize()
+    window.addEventListener('resize', imageMapResize)
+    return () => window.removeEventListener('resize', imageMapResize)
   }, [])
   
   useEffect(() => {
-    // Initialize image map resizer for enlarged map
-    if (showEnlargedMap && enlargedMapRef.current) {
-      setTimeout(() => {
-        imageMapResize()
-        updateImageScale()
-      }, 100)
+    if (showEnlargedMap) {
+      setTimeout(() => imageMapResize(), 100)
     }
   }, [showEnlargedMap])
-  
-  const updateImageScale = () => {
-    if (mapRef.current) {
-      const scale = mapRef.current.offsetWidth / 944 // 944 = original width
-      setImageScale(scale)
-    }
-  }
 
   const handleRoomClick = (room: MeetingRoom) => {
     setSelectedRoom(room)
@@ -112,21 +90,7 @@ function App() {
                 <area shape="circle" coords="444,412,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[15]) }} alt="Airlie Beach" />
                 <area shape="circle" coords="444,489,35" onClick={(e) => { e.preventDefault(); handleMapClick(meetingRooms[16]) }} alt="Bright" />
               </map>
-              {selectedRoom && mapRef.current && (
-                <svg 
-                  className="floor-plan-svg-overlay" 
-                  viewBox={`0 0 ${mapRef.current.offsetWidth} ${mapRef.current.offsetHeight}`}
-                  preserveAspectRatio="xMidYMid meet"
-                  style={{ width: mapRef.current.offsetWidth, height: mapRef.current.offsetHeight }}
-                >
-                  <circle
-                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1] * imageScale}
-                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1] * imageScale}
-                    r={30 * imageScale}
-                    className="svg-pulse"
-                  />
-                </svg>
-              )}
+
             </div>
             <div className="text-center mt-2">
               <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
@@ -194,21 +158,7 @@ function App() {
                 <area shape="circle" coords="444,412,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[15]) }} alt="Airlie Beach" />
                 <area shape="circle" coords="444,489,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[16]) }} alt="Bright" />
               </map>
-              {selectedRoom && enlargedMapRef.current && (
-                <svg 
-                  className="enlarged-svg-overlay" 
-                  viewBox={`0 0 ${enlargedMapRef.current.offsetWidth} ${enlargedMapRef.current.offsetHeight}`}
-                  preserveAspectRatio="xMidYMid meet"
-                  style={{ width: enlargedMapRef.current.offsetWidth, height: enlargedMapRef.current.offsetHeight }}
-                >
-                  <circle
-                    cx={[51.9, 523.9, 892.1, 509.8, 372.9, 467.3, 566.4, 236.0, 179.4, 188.8, 188.8, 165.2, 94.4, 618.3, 618.3, 443.7, 443.7][selectedRoom.id - 1] * (enlargedMapRef.current.offsetWidth / 944)}
-                    cy={[91.2, 62.1, 94.9, 335.8, 554.8, 554.8, 554.8, 32.9, 284.7, 365.0, 511.0, 631.5, 631.5, 310.2, 368.6, 412.4, 489.1][selectedRoom.id - 1] * (enlargedMapRef.current.offsetHeight / 730)}
-                    r={40 * (enlargedMapRef.current.offsetWidth / 944)}
-                    className="svg-pulse-enlarged"
-                  />
-                </svg>
-              )}
+
             </div>
           </div>
           {selectedRoom && (
@@ -225,7 +175,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v2.2.0</small>
+        <small className="text-muted">Meeting Rooms v3.0.0</small>
       </footer>
     </CContainer>
   )
