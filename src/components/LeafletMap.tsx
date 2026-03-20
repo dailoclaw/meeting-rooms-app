@@ -149,25 +149,27 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       })
     })
 
-    // Pan to selected room (only on main map, not enlarged)
-    if (selectedRoom && !enlarged) {
+    // Zoom and pan to selected room
+    if (selectedRoom) {
       const coords = roomCoordinates[selectedRoom.id]
       if (coords) {
         const [px_x, px_y] = coords
         const lat = 730 - px_y
         const lng = px_x
-        leafletMapRef.current.setView([lat, lng], 0, { animate: true })
+        
+        if (enlarged) {
+          // On enlarged view, zoom in to 1.5x
+          leafletMapRef.current.setView([lat, lng], 1.5, { animate: true })
+        } else {
+          // On main view, zoom in to 1x
+          leafletMapRef.current.setView([lat, lng], 1, { animate: true })
+        }
       }
-    }
-    // On enlarged map, just pan without changing zoom
-    if (selectedRoom && enlarged) {
-      const coords = roomCoordinates[selectedRoom.id]
-      if (coords) {
-        const [px_x, px_y] = coords
-        const lat = 730 - px_y
-        const lng = px_x
-        const currentZoom = leafletMapRef.current.getZoom()
-        leafletMapRef.current.setView([lat, lng], currentZoom, { animate: true })
+    } else {
+      // No room selected - zoom back out to fit bounds
+      if (leafletMapRef.current) {
+        const bounds = new L.LatLngBounds([730, 0], [0, 944])
+        leafletMapRef.current.fitBounds(bounds)
       }
     }
   }, [selectedRoom, enlarged])
