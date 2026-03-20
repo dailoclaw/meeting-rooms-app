@@ -3,7 +3,7 @@ import { CContainer, CCard, CCardBody, CModal, CModalBody, CModalHeader } from '
 import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 import { meetingRooms, type MeetingRoom } from './data/meetingRooms'
-import LeafletMap from './components/LeafletMap'
+import SvgFloorPlan from './components/SvgFloorPlan'
 import './App.css'
 
 function App() {
@@ -46,17 +46,19 @@ function App() {
 
       {/* Floor Plan */}
       <CCard id="floor-plan">
-        <CCardBody className="p-2">
+        <CCardBody className="p-3">
           <div className="d-flex align-items-center justify-content-end mb-2">
             <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
-              Click map to enlarge
+              Click to enlarge
             </small>
           </div>
-          <LeafletMap 
-            selectedRoom={selectedRoom}
-            onRoomSelect={handleRoomClick}
-            rooms={meetingRooms}
-          />
+          <div onClick={() => setShowEnlargedMap(true)} style={{ cursor: 'zoom-in' }}>
+            <SvgFloorPlan 
+              selectedRoom={selectedRoom}
+              onRoomSelect={handleRoomClick}
+              rooms={meetingRooms}
+            />
+          </div>
         </CCardBody>
       </CCard>
 
@@ -84,21 +86,22 @@ function App() {
         <CModalHeader closeButton className="bg-dark text-white border-0">
           <h5 className="mb-0">Meeting Rooms Floor Plan</h5>
         </CModalHeader>
-        <CModalBody className="p-0 bg-dark">
-          <LeafletMap 
-            selectedRoom={selectedRoom}
-            onRoomSelect={(room) => {
-              setSelectedRoom(room)
-            }}
-            rooms={meetingRooms}
-            enlarged
-          />
+        <CModalBody className="p-3" style={{ background: '#f8f9fa', maxHeight: '90vh', overflow: 'auto' }}>
+          <div style={{ transform: 'scale(1.5)', transformOrigin: 'top center', padding: '20px' }}>
+            <SvgFloorPlan 
+              selectedRoom={selectedRoom}
+              onRoomSelect={(room) => {
+                setSelectedRoom(room)
+              }}
+              rooms={meetingRooms}
+            />
+          </div>
         </CModalBody>
       </CModal>
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v4.1.4</small>
+        <small className="text-muted">Meeting Rooms v5.0.0</small>
       </div>
     </CContainer>
   )
