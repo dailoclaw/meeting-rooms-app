@@ -9,6 +9,10 @@ import './App.css'
 function App() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null)
   const [showEnlargedMap, setShowEnlargedMap] = useState(false)
+  const [enlargedScale, setEnlargedScale] = useState(1.5)
+  const [enlargedPosition, setEnlargedPosition] = useState({ x: 0, y: 0 })
+  const [isPanning, setIsPanning] = useState(false)
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 })
   const mapRef = useRef<HTMLImageElement>(null)
   const enlargedMapRef = useRef<HTMLImageElement>(null)
   
@@ -21,17 +25,69 @@ function App() {
   useEffect(() => {
     if (showEnlargedMap) {
       setTimeout(() => imageMapResize(), 100)
+      // Reset zoom and position when opening
+      setEnlargedScale(1.5)
+      setEnlargedPosition({ x: 0, y: 0 })
     }
   }, [showEnlargedMap])
+  
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsPanning(true)
+    setPanStart({ x: e.clientX - enlargedPosition.x, y: e.clientY - enlargedPosition.y })
+  }
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isPanning) return
+    setEnlargedPosition({
+      x: e.clientX - panStart.x,
+      y: e.clientY - panStart.y
+    })
+  }
+  
+  const handleMouseUp = () => {
+    setIsPanning(false)
+  }
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsPanning(true)
+      setPanStart({ 
+        x: e.touches[0].clientX - enlargedPosition.x, 
+        y: e.touches[0].clientY - enlargedPosition.y 
+      })
+    }
+  }
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isPanning || e.touches.length !== 1) return
+    setEnlargedPosition({
+      x: e.touches[0].clientX - panStart.x,
+      y: e.touches[0].clientY - panStart.y
+    })
+  }
+  
+  const handleTouchEnd = () => {
+    setIsPanning(false)
+  }
 
   const handleRoomClick = (room: MeetingRoom) => {
-    setSelectedRoom(room)
-    // Scroll to map
-    document.getElementById('floor-plan')?.scrollIntoView({ behavior: 'smooth' })
+    // Toggle selection - if clicking same room, deselect
+    if (selectedRoom?.id === room.id) {
+      setSelectedRoom(null)
+    } else {
+      setSelectedRoom(room)
+      // Scroll to map
+      document.getElementById('floor-plan')?.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   const handleMapClick = (room: MeetingRoom) => {
-    setSelectedRoom(room)
+    // Toggle selection - if clicking same room, deselect
+    if (selectedRoom?.id === room.id) {
+      setSelectedRoom(null)
+    } else {
+      setSelectedRoom(room)
+    }
   }
 
   return (
@@ -139,14 +195,44 @@ function App() {
           </CButton>
         </CModalHeader>
         <CModalBody className="p-0 bg-dark">
-          <div className="enlarged-map-container">
-            <div className="enlarged-map-wrapper">
+          <div className="enlarged-controls">
+            <label className="text-white me-2">Zoom:</label>
+            <input 
+              type="range" 
+              min="1" 
+              max="3" 
+              step="0.1" 
+              value={enlargedScale}
+              onChange={(e) => setEnlargedScale(parseFloat(e.target.value))}
+              className="zoom-slider"
+            />
+            <span className="text-white ms-2">{enlargedScale.toFixed(1)}x</span>
+          </div>
+          <div 
+            className="enlarged-map-container"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
+          >
+            <div 
+              className="enlarged-map-wrapper"
+              style={{
+                transform: `scale(${enlargedScale}) translate(${enlargedPosition.x / enlargedScale}px, ${enlargedPosition.y / enlargedScale}px)`,
+                transition: isPanning ? 'none' : 'transform 0.1s ease-out'
+              }}
+            >
               <img
                 ref={enlargedMapRef}
                 src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan - Enlarged"
                 className="enlarged-map-image"
                 useMap="#roommap-enlarged"
+                draggable={false}
               />
               <map name="roommap-enlarged">
                 <area shape="circle" coords="52,91,45" onClick={(e) => { e.preventDefault(); setSelectedRoom(meetingRooms[0]) }} alt="The Hub" />
@@ -184,7 +270,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.1.1</small>
+        <small className="text-muted">Meeting Rooms v3.2.0</small>
       </footer>
     </CContainer>
   )
