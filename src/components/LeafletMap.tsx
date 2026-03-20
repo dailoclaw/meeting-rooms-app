@@ -10,6 +10,27 @@ interface LeafletMapProps {
   enlarged?: boolean
 }
 
+// Hardcoded pixel coordinates from original map
+const roomCoordinates: Record<number, [number, number]> = {
+  1: [51.9, 91.2],
+  2: [523.9, 62.1],
+  3: [892.1, 94.9],
+  4: [509.8, 335.8],
+  5: [372.9, 554.8],
+  6: [467.3, 554.8],
+  7: [566.4, 554.8],
+  8: [236.0, 32.9],
+  9: [179.4, 284.7],
+  10: [188.8, 365.0],
+  11: [188.8, 511.0],
+  12: [165.2, 631.5],
+  13: [94.4, 631.5],
+  14: [618.3, 310.2],
+  15: [618.3, 368.6],
+  16: [443.7, 412.4],
+  17: [443.7, 489.1],
+}
+
 export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged = false }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const leafletMapRef = useRef<L.Map | null>(null)
@@ -22,34 +43,36 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
     const imageWidth = 944
     const imageHeight = 730
 
-    // Create map with image bounds
+    // Create map with CRS.Simple and image bounds
     const map = L.map(mapRef.current, {
       crs: L.CRS.Simple,
-      minZoom: enlarged ? -1 : 0,
+      minZoom: enlarged ? -1 : -0.5,
       maxZoom: enlarged ? 2 : 1,
       zoomControl: enlarged,
       attributionControl: false,
+      zoomSnap: 0.1,
     })
 
-    // Set image bounds
+    // Image bounds: [[y_min, x_min], [y_max, x_max]]
+    // Leaflet uses [lat, lng] which maps to [y, x] for images
     const bounds: L.LatLngBoundsExpression = [[0, 0], [imageHeight, imageWidth]]
     
     // Add image overlay
     L.imageOverlay('/meeting-rooms-map.jpg', bounds).addTo(map)
     
-    // Fit bounds
+    // Fit map to image bounds
     map.fitBounds(bounds)
-    
-    // Set max bounds to prevent panning outside image
-    map.setMaxBounds(bounds)
+    map.setMaxBounds(bounds.map(b => [b[0] - 50, b[1] - 50]) as L.LatLngBoundsExpression)
 
-    // Add markers for each room
-    // Convert percentage coordinates to pixel coordinates
+    // Add markers for each room using hardcoded coordinates
     rooms.forEach(room => {
-      const pixelX = (room.x / 100) * imageWidth
-      const pixelY = (room.y / 100) * imageHeight
+      const coords = roomCoordinates[room.id]
+      if (!coords) return
       
-      const marker = L.circleMarker([pixelY, pixelX], {
+      const [x, y] = coords
+      
+      // Leaflet uses [lat, lng] = [y, x]
+      const marker = L.circleMarker([y, x], {
         radius: enlarged ? 20 : 15,
         fillColor: 'rgba(255, 193, 7, 0.3)',
         color: 'rgba(255, 193, 7, 0.8)',
@@ -62,7 +85,8 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
       // Add tooltip
       marker.bindTooltip(`#${room.id} ${room.name}`, {
         permanent: false,
-        direction: 'top'
+        direction: 'top',
+        offset: [0, -10]
       })
 
       markersRef.current.set(room.id, marker)
@@ -93,9 +117,10 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
 
     // Pan to selected room
     if (selectedRoom && !enlarged) {
-      const marker = markersRef.current.get(selectedRoom.id)
-      if (marker) {
-        leafletMapRef.current.setView(marker.getLatLng(), 0.5, { animate: true })
+      const coords = roomCoordinates[selectedRoom.id]
+      if (coords) {
+        const [x, y] = coords
+        leafletMapRef.current.setView([y, x], 0.5, { animate: true })
       }
     }
   }, [selectedRoom, enlarged])

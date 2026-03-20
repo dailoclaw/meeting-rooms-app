@@ -98,7 +98,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v4.0.1</small>
+        <small className="text-muted">Meeting Rooms v4.0.2</small>
       </div>
     </CContainer>
   )
