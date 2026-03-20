@@ -66,7 +66,7 @@ function App() {
             <div 
               className="floor-plan-wrapper"
               style={selectedRoom ? {
-                transform: 'scale(1.8)',
+                transform: 'scale(2.5)',
                 transformOrigin: `${meetingRooms.find(r => r.id === selectedRoom.id)?.x}% ${meetingRooms.find(r => r.id === selectedRoom.id)?.y}%`,
                 transition: 'transform 0.5s ease-in-out'
               } : {
@@ -184,7 +184,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.1.0</small>
+        <small className="text-muted">Meeting Rooms v3.1.1</small>
       </footer>
     </CContainer>
   )
