@@ -161,7 +161,7 @@ function App() {
             >
               <img
                 ref={mapRef}
-                src="/meeting-rooms-map-labeled.jpg"
+                src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan"
                 className="floor-plan-image"
                 useMap="#roommap"
@@ -253,7 +253,7 @@ function App() {
             >
               <img
                 ref={enlargedMapRef}
-                src="/meeting-rooms-map-labeled.jpg"
+                src="/meeting-rooms-map.jpg"
                 alt="Meeting Rooms Floor Plan - Enlarged"
                 className="enlarged-map-image"
                 useMap="#roommap-enlarged"
@@ -295,7 +295,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.3.2</small>
+        <small className="text-muted">Meeting Rooms v3.3.3</small>
       </footer>
     </CContainer>
   )
