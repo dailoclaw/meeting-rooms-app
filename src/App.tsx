@@ -63,7 +63,16 @@ function App() {
       <CCard id="floor-plan">
         <CCardBody className="p-2">
           <div className="floor-plan-container">
-            <div className="floor-plan-wrapper">
+            <div 
+              className="floor-plan-wrapper"
+              style={selectedRoom ? {
+                transform: 'scale(1.8)',
+                transformOrigin: `${meetingRooms.find(r => r.id === selectedRoom.id)?.x}% ${meetingRooms.find(r => r.id === selectedRoom.id)?.y}%`,
+                transition: 'transform 0.5s ease-in-out'
+              } : {
+                transition: 'transform 0.5s ease-in-out'
+              }}
+            >
               <img
                 ref={mapRef}
                 src="/meeting-rooms-map.jpg"
@@ -175,7 +184,7 @@ function App() {
 
       {/* Footer */}
       <footer className="text-center mt-4 pb-3">
-        <small className="text-muted">Meeting Rooms v3.0.0</small>
+        <small className="text-muted">Meeting Rooms v3.1.0</small>
       </footer>
     </CContainer>
   )
