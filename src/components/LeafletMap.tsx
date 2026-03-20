@@ -158,11 +158,11 @@ export default function LeafletMap({ selectedRoom, onRoomSelect, rooms, enlarged
         const lng = px_x
         
         if (enlarged) {
-          // On enlarged view, zoom in to 1.5x
-          leafletMapRef.current.setView([lat, lng], 1.5, { animate: true })
+          // On enlarged view, zoom in to 0.8x
+          leafletMapRef.current.setView([lat, lng], 0.8, { animate: true })
         } else {
-          // On main view, zoom in to 1x
-          leafletMapRef.current.setView([lat, lng], 1, { animate: true })
+          // On main view, zoom in to 0.3x
+          leafletMapRef.current.setView([lat, lng], 0.3, { animate: true })
         }
       }
     } else {
