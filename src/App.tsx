@@ -1,18 +1,13 @@
 import { useState } from 'react'
-import { CContainer, CCard, CCardBody, CInputGroup, CFormInput, CButton, CModal, CModalBody, CModalHeader } from '@coreui/react'
+import { CContainer, CCard, CCardBody, CButton, CModal, CModalBody, CModalHeader } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPeople, cilSearch, cilZoomIn, cilX } from '@coreui/icons'
+import { cilPeople, cilZoomIn, cilX } from '@coreui/icons'
 import { meetingRooms, type MeetingRoom } from './data/meetingRooms'
 import './App.css'
 
 function App() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
   const [showEnlargedMap, setShowEnlargedMap] = useState(false)
-
-  const filteredRooms = meetingRooms.filter(room =>
-    room.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
 
   const handleRoomClick = (room: MeetingRoom) => {
     setSelectedRoom(room)
@@ -26,29 +21,15 @@ function App() {
 
   return (
     <CContainer className="py-3">
-      <div className="d-flex align-items-center mb-3">
-        <h2 className="text-white mb-0 flex-grow-1 text-center">Meeting Rooms</h2>
+      <div className="mb-3">
+        <h2 className="mb-0">Meeting Rooms</h2>
       </div>
-
-      {/* Search */}
-      <CInputGroup className="mb-3">
-        <CInputGroup className="mb-0">
-          <span className="input-group-text">
-            <CIcon icon={cilSearch} />
-          </span>
-          <CFormInput
-            placeholder="Search rooms..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </CInputGroup>
-      </CInputGroup>
 
       {/* Room List */}
       <CCard className="mb-3">
         <CCardBody className="p-2">
           <div className="row g-2">
-            {filteredRooms.map(room => (
+            {meetingRooms.map(room => (
               <div key={room.id} className="col-6">
                 <div
                   onClick={() => handleRoomClick(room)}
@@ -126,13 +107,13 @@ function App() {
         fullscreen
         className="enlarged-map-modal"
       >
-        <CModalHeader className="bg-dark text-white border-0">
+        <CModalHeader className="bg-dark text-white border-0" closeButton={false}>
           <h5 className="mb-0">Meeting Rooms Floor Plan</h5>
           <CButton
             color="light"
             variant="ghost"
             onClick={() => setShowEnlargedMap(false)}
-            className="text-white"
+            className="text-white ms-auto"
           >
             <CIcon icon={cilX} size="lg" />
           </CButton>
