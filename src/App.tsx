@@ -55,19 +55,6 @@ function App() {
         </CCardBody>
       </CCard>
 
-      {/* Room Info */}
-      {selectedRoom && (
-        <CCard className="mt-3">
-          <CCardBody>
-            <h4>#{selectedRoom.id} {selectedRoom.name}</h4>
-            <p className="mb-1">
-              <CIcon icon={cilPeople} className="me-2" />
-              Capacity: {selectedRoom.capacity}
-            </p>
-          </CCardBody>
-        </CCard>
-      )}
-
       {/* Enlarged Map Modal */}
       <CModal
         visible={showEnlargedMap}
@@ -100,7 +87,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.2.3</small>
+        <small className="text-muted">Meeting Rooms v6.2.4</small>
       </div>
     </CContainer>
   )
