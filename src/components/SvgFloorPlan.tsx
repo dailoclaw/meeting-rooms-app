@@ -81,12 +81,12 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
               {/* Tooltip popup - only shown when selected */}
               {isSelected && (
                 <g>
-                  {/* Tooltip background */}
+                  {/* Tooltip background - move below for room 8 (Undara) at top of map */}
                   <rect
-                    x={x - 70}
-                    y={y - 60}
-                    width="140"
-                    height="45"
+                    x={x - 60}
+                    y={room.id === 8 ? y + 25 : y - 50}
+                    width="120"
+                    height="35"
                     fill="rgba(0, 0, 0, 0.85)"
                     stroke="#F5C200"
                     strokeWidth="2"
@@ -95,7 +95,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
                   {/* Room number */}
                   <text
                     x={x}
-                    y={y - 42}
+                    y={room.id === 8 ? y + 40 : y - 35}
                     textAnchor="middle"
                     fontSize="13"
                     fill="#F5C200"
@@ -107,7 +107,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
                   {/* Room name */}
                   <text
                     x={x}
-                    y={y - 27}
+                    y={room.id === 8 ? y + 53 : y - 22}
                     textAnchor="middle"
                     fontSize="12"
                     fill="white"
@@ -115,17 +115,6 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
                     pointerEvents="none"
                   >
                     {room.name}
-                  </text>
-                  {/* Capacity */}
-                  <text
-                    x={x}
-                    y={y - 13}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fill="#adb5bd"
-                    pointerEvents="none"
-                  >
-                    👥 Capacity: {room.capacity}
                   </text>
                 </g>
               )}
