@@ -25,25 +25,6 @@ function App() {
     <CContainer className="py-4">
       <h2 className="text-center mb-4" style={{ color: '#333' }}>Meeting Rooms</h2>
 
-      {/* Room List */}
-      <CCard className="mb-3">
-        <CCardBody className="p-2">
-          <div className="row g-2">
-            {meetingRooms.map(room => (
-              <div key={room.id} className="col-6">
-                <div
-                  onClick={() => handleRoomClick(room)}
-                  style={{ cursor: 'pointer', textAlign: 'left' }}
-                  className={`p-2 rounded ${selectedRoom?.id === room.id ? 'bg-primary text-white' : 'bg-light'}`}
-                >
-                  <strong className="room-name">#{room.id} {room.name}</strong>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CCardBody>
-      </CCard>
-
       {/* Floor Plan */}
       <CCard id="floor-plan">
         <CCardBody className="p-0">
@@ -102,7 +83,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.2.0</small>
+        <small className="text-muted">Meeting Rooms v6.2.1</small>
       </div>
     </CContainer>
   )
