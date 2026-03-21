@@ -23,8 +23,6 @@ function App() {
 
   return (
     <CContainer className="py-4">
-      <h2 className="text-center mb-4" style={{ color: '#333' }}>Meeting Rooms</h2>
-
       {/* Floor Plan */}
       <CCard id="floor-plan">
         <CCardBody className="p-0">
@@ -83,7 +81,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.2.1</small>
+        <small className="text-muted">Meeting Rooms v6.2.2</small>
       </div>
     </CContainer>
   )
