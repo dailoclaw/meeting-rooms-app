@@ -69,8 +69,8 @@ area {
     transform: scale(1);
   }
   50% {
-    opacity: 0.85;
-    transform: scale(1.03);
+    opacity: 0.9;
+    transform: scale(1.1);
   }
 }
 
