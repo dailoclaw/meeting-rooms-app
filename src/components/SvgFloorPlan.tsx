@@ -100,7 +100,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms, enlarg
               
               {/* Tooltip popup - only shown when selected */}
               {isSelected && (
-                <g>
+                <g className="tooltip-pulse">
                   {/* Tooltip background - move below for room 8 (Undara) at top of map */}
                   <rect
                     x={x - 60}

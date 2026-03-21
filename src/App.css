@@ -62,6 +62,24 @@ area {
   animation: pulse 2s ease-in-out infinite;
 }
 
+/* Pulse animation for SVG tooltip labels */
+@keyframes tooltipPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+.tooltip-pulse {
+  animation: tooltipPulse 2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
 /* Enlarged Map Modal */
 .enlarged-map-modal .modal-content {
   background-color: #000;
