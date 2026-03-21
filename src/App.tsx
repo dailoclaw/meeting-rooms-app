@@ -56,7 +56,10 @@ function App() {
       {/* Enlarged Map Modal */}
       <CModal
         visible={showEnlargedMap}
-        onClose={() => setShowEnlargedMap(false)}
+        onClose={() => {
+          setShowEnlargedMap(false)
+          setSelectedRoom(null) // Reset selection when closing
+        }}
         size="xl"
         fullscreen
         className="enlarged-map-modal"
@@ -66,7 +69,10 @@ function App() {
           <button 
             type="button" 
             className="btn-close btn-close-white" 
-            onClick={() => setShowEnlargedMap(false)}
+            onClick={() => {
+              setShowEnlargedMap(false)
+              setSelectedRoom(null) // Reset selection when closing
+            }}
             aria-label="Close"
           />
         </CModalHeader>
@@ -85,7 +91,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.3.0</small>
+        <small className="text-muted">Meeting Rooms v6.3.1</small>
       </div>
     </CContainer>
   )
