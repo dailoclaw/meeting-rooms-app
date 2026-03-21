@@ -30,7 +30,7 @@ const roomCoordinates: Record<number, [number, number]> = {
 export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgFloorPlanProps) {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      {/* Vector floor plan - fully scalable! */}
+      {/* Vector floor plan with yellow circles and room numbers built-in! */}
       <object
         data="/meeting-rooms-vector.svg"
         type="image/svg+xml"
@@ -43,7 +43,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
         }}
       />
       
-      {/* Interactive overlay SVG for room markers and clickable areas */}
+      {/* Interactive overlay SVG for clickable areas and tooltips only */}
       <svg
         viewBox="0 0 944 730"
         style={{
@@ -55,7 +55,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
           pointerEvents: 'none',
         }}
       >
-        {/* Room circles and numbers */}
+        {/* Invisible clickable areas over each room */}
         {rooms.map(room => {
           const coords = roomCoordinates[room.id]
           if (!coords) return null
@@ -69,29 +69,14 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
               onClick={() => onRoomSelect(room)}
               style={{ cursor: 'pointer', pointerEvents: 'all' }}
             >
-              {/* Yellow circle marker */}
+              {/* Invisible clickable circle */}
               <circle
                 cx={x}
                 cy={y}
-                r={isSelected ? 20 : 18}
-                fill="#F5C200"
-                stroke={isSelected ? '#ff9800' : '#e6b800'}
-                strokeWidth={isSelected ? 2.5 : 1.5}
+                r={30}
+                fill="transparent"
+                stroke="none"
               />
-              
-              {/* Room number inside circle */}
-              <text
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={isSelected ? 16 : 14}
-                fontWeight="bold"
-                fill="#000000"
-                pointerEvents="none"
-              >
-                {room.id}
-              </text>
               
               {/* Tooltip popup - only shown when selected */}
               {isSelected && (
