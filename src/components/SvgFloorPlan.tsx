@@ -43,7 +43,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
         }}
       />
       
-      {/* Interactive overlay SVG for clickable areas */}
+      {/* Interactive overlay SVG for room markers and clickable areas */}
       <svg
         viewBox="0 0 944 730"
         style={{
@@ -55,7 +55,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
           pointerEvents: 'none',
         }}
       >
-        {/* Clickable areas over each room */}
+        {/* Room circles and numbers */}
         {rooms.map(room => {
           const coords = roomCoordinates[room.id]
           if (!coords) return null
@@ -69,14 +69,29 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
               onClick={() => onRoomSelect(room)}
               style={{ cursor: 'pointer', pointerEvents: 'all' }}
             >
-              {/* Invisible clickable circle */}
+              {/* Yellow circle marker */}
               <circle
                 cx={x}
                 cy={y}
-                r={30}
-                fill="transparent"
-                stroke="none"
+                r={isSelected ? 20 : 18}
+                fill="#F5C200"
+                stroke={isSelected ? '#ff9800' : '#e6b800'}
+                strokeWidth={isSelected ? 2.5 : 1.5}
               />
+              
+              {/* Room number inside circle */}
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={isSelected ? 16 : 14}
+                fontWeight="bold"
+                fill="#000000"
+                pointerEvents="none"
+              >
+                {room.id}
+              </text>
               
               {/* Tooltip popup - only shown when selected */}
               {isSelected && (
@@ -88,7 +103,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
                     width="140"
                     height="45"
                     fill="rgba(0, 0, 0, 0.85)"
-                    stroke="#ffc107"
+                    stroke="#F5C200"
                     strokeWidth="2"
                     rx="6"
                   />
@@ -98,7 +113,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
                     y={y - 42}
                     textAnchor="middle"
                     fontSize="13"
-                    fill="#ffc107"
+                    fill="#F5C200"
                     fontWeight="bold"
                     pointerEvents="none"
                   >
