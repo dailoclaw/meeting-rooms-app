@@ -77,21 +77,20 @@ function App() {
           />
         </CModalHeader>
         <CModalBody className="p-3" style={{ background: '#f8f9fa', maxHeight: '90vh', overflow: 'auto' }}>
-          <div style={{ transform: 'scale(1.5)', transformOrigin: 'top center', padding: '20px' }}>
-            <SvgFloorPlan 
-              selectedRoom={selectedRoom}
-              onRoomSelect={(room) => {
-                setSelectedRoom(room)
-              }}
-              rooms={meetingRooms}
-            />
-          </div>
+          <SvgFloorPlan 
+            selectedRoom={selectedRoom}
+            onRoomSelect={(room) => {
+              setSelectedRoom(room)
+            }}
+            rooms={meetingRooms}
+            enlarged={true}
+          />
         </CModalBody>
       </CModal>
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.3.1</small>
+        <small className="text-muted">Meeting Rooms v6.3.2</small>
       </div>
     </CContainer>
   )

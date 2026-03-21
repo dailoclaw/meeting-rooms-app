@@ -4,6 +4,7 @@ interface SvgFloorPlanProps {
   selectedRoom: MeetingRoom | null
   onRoomSelect: (room: MeetingRoom) => void
   rooms: MeetingRoom[]
+  enlarged?: boolean
 }
 
 // Exact pixel coordinates - manually marked by user on vector SVG (x, y)
@@ -27,10 +28,10 @@ const roomCoordinates: Record<number, [number, number]> = {
   17: [503, 413], // Bright
 }
 
-export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgFloorPlanProps) {
-  // Calculate zoom transform if room is selected
+export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms, enlarged = false }: SvgFloorPlanProps) {
+  // Calculate zoom transform if room is selected (but NOT in enlarged modal)
   const getTransform = () => {
-    if (!selectedRoom) return 'scale(1)'
+    if (enlarged || !selectedRoom) return 'scale(1)'
     return `scale(1.8)`
   }
   
