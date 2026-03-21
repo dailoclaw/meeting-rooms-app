@@ -6,25 +6,25 @@ interface SvgFloorPlanProps {
   rooms: MeetingRoom[]
 }
 
-// Exact pixel coordinates from original image (x, y)
+// Exact pixel coordinates - manually marked by user on vector SVG (x, y)
 const roomCoordinates: Record<number, [number, number]> = {
-  1: [51.9, 91.2],
-  2: [523.9, 62.1],
-  3: [892.1, 94.9],
-  4: [509.8, 335.8],
-  5: [372.9, 554.8],
-  6: [467.3, 554.8],
-  7: [566.4, 554.8],
-  8: [236.0, 32.9],
-  9: [179.4, 284.7],
-  10: [188.8, 365.0],
-  11: [188.8, 511.0],
-  12: [165.2, 631.5],
-  13: [94.4, 631.5],
-  14: [618.3, 310.2],
-  15: [618.3, 368.6],
-  16: [443.7, 412.4],
-  17: [443.7, 489.1],
+  1: [68, 88],    // The Hub
+  2: [556, 60],   // The Café
+  3: [889, 102],  // El Questro
+  4: [543, 313],  // Rottnest Island
+  5: [505, 478],  // Streaky Bay
+  6: [567, 481],  // Cradle Mountain
+  7: [628, 479],  // Broome
+  8: [180, 27],   // Undara
+  9: [270, 278],  // Pambula Beach
+  10: [270, 336], // Lake Hume
+  11: [273, 447], // Kings Canyon
+  12: [209, 554], // Jindabyne
+  13: [151, 555], // Goolwa
+  14: [635, 293], // Mount Isa
+  15: [634, 334], // Byron Bay
+  16: [505, 367], // Airlie Beach
+  17: [503, 413], // Bright
 }
 
 export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgFloorPlanProps) {
