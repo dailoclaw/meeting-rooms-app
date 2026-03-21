@@ -74,19 +74,10 @@ function App() {
         className="enlarged-map-modal"
         backdrop="static"
       >
-        <CModalHeader className="bg-dark text-white border-0">
-          <h5 className="mb-0 flex-grow-1">Meeting Rooms Floor Plan</h5>
-          <button 
-            type="button" 
-            className="btn-close btn-close-white ms-auto" 
-            onClick={() => {
-              setShowEnlargedMap(false)
-              setSelectedRoom(null)
-            }}
-            aria-label="Close"
-          />
+        <CModalHeader closeButton className="bg-light border-bottom">
+          <h5 className="mb-0">Meeting Rooms Floor Plan</h5>
         </CModalHeader>
-        <CModalBody className="p-3" style={{ background: '#f8f9fa', maxHeight: '90vh', overflow: 'auto' }}>
+        <CModalBody className="p-3 bg-light" style={{ maxHeight: '90vh', overflow: 'auto' }}>
           <SvgFloorPlan 
             selectedRoom={selectedRoom}
             onRoomSelect={(room) => {
@@ -100,7 +91,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.3.5</small>
+        <small className="text-muted">Meeting Rooms v6.3.6</small>
       </div>
     </CContainer>
   )
