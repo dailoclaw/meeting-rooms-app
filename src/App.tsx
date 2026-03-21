@@ -46,9 +46,11 @@ function App() {
           <div 
             onClick={() => setShowEnlargedMap(true)} 
             style={{ 
-              cursor: 'zoom-in', 
-              overflow: 'hidden', 
-              position: 'relative' 
+              cursor: selectedRoom ? 'grab' : 'zoom-in', 
+              overflow: selectedRoom ? 'auto' : 'hidden',
+              position: 'relative',
+              maxHeight: '600px',
+              touchAction: selectedRoom ? 'pan-x pan-y' : 'auto'
             }}
           >
             <SvgFloorPlan 
@@ -65,23 +67,23 @@ function App() {
         visible={showEnlargedMap}
         onClose={() => {
           setShowEnlargedMap(false)
-          setSelectedRoom(null) // Reset selection when closing
+          setSelectedRoom(null)
         }}
         size="xl"
         fullscreen
         className="enlarged-map-modal"
+        backdrop="static"
       >
-        <CModalHeader className="bg-dark text-white border-0 d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">Meeting Rooms Floor Plan</h5>
+        <CModalHeader className="bg-dark text-white border-0">
+          <h5 className="mb-0 flex-grow-1">Meeting Rooms Floor Plan</h5>
           <button 
             type="button" 
-            className="btn-close btn-close-white" 
+            className="btn-close btn-close-white ms-auto" 
             onClick={() => {
               setShowEnlargedMap(false)
               setSelectedRoom(null)
             }}
             aria-label="Close"
-            style={{ margin: 0 }}
           />
         </CModalHeader>
         <CModalBody className="p-3" style={{ background: '#f8f9fa', maxHeight: '90vh', overflow: 'auto' }}>
@@ -98,7 +100,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.3.4</small>
+        <small className="text-muted">Meeting Rooms v6.3.5</small>
       </div>
     </CContainer>
   )
