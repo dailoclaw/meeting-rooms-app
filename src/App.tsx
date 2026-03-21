@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { CContainer, CCard, CCardBody, CModal, CModalBody, CModalHeader } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilPeople } from '@coreui/icons'
 import { meetingRooms, type MeetingRoom } from './data/meetingRooms'
 import SvgFloorPlan from './components/SvgFloorPlan'
 import './App.css'
