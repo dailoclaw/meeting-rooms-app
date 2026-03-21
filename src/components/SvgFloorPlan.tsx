@@ -59,7 +59,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms, enlarg
           pointerEvents: 'none',
           transform: getTransform(),
           transformOrigin: getTransformOrigin(),
-          transition: 'transform 0.5s ease-in-out',
+          transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform-origin 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       />
       

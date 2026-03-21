@@ -30,7 +30,7 @@ function App() {
                 <div
                   onClick={() => handleRoomClick(room)}
                   style={{ cursor: 'pointer', textAlign: 'left' }}
-                  className={`p-2 rounded ${selectedRoom?.id === room.id ? 'bg-primary text-white' : 'bg-light'}`}
+                  className={`p-2 rounded ${selectedRoom?.id === room.id ? 'bg-primary text-white room-pulse' : 'bg-light'}`}
                 >
                   <strong className="room-name">#{room.id} {room.name}</strong>
                 </div>
@@ -91,7 +91,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.3.6</small>
+        <small className="text-muted">Meeting Rooms v6.4.0</small>
       </div>
     </CContainer>
   )
