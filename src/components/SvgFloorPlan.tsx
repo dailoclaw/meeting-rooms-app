@@ -28,6 +28,28 @@ const roomCoordinates: Record<number, [number, number]> = {
 }
 
 export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgFloorPlanProps) {
+  // Calculate zoom transform if room is selected
+  const getTransform = () => {
+    if (!selectedRoom) return 'scale(1)'
+    const coords = roomCoordinates[selectedRoom.id]
+    if (!coords) return 'scale(1)'
+    const [x, y] = coords
+    // Calculate percentage position for transform-origin
+    const originX = (x / 944) * 100
+    const originY = (y / 730) * 100
+    return `scale(1.8)`
+  }
+  
+  const getTransformOrigin = () => {
+    if (!selectedRoom) return 'center center'
+    const coords = roomCoordinates[selectedRoom.id]
+    if (!coords) return 'center center'
+    const [x, y] = coords
+    const originX = (x / 944) * 100
+    const originY = (y / 730) * 100
+    return `${originX}% ${originY}%`
+  }
+
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       {/* Vector floor plan with yellow circles and room numbers built-in! */}
@@ -40,6 +62,9 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
           maxHeight: '600px',
           border: '2px solid #495057',
           pointerEvents: 'none',
+          transform: getTransform(),
+          transformOrigin: getTransformOrigin(),
+          transition: 'transform 0.5s ease-in-out',
         }}
       />
       

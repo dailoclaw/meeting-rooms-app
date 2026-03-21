@@ -46,12 +46,7 @@ function App() {
 
       {/* Floor Plan */}
       <CCard id="floor-plan">
-        <CCardBody className="p-3">
-          <div className="d-flex align-items-center justify-content-end mb-2">
-            <small className="text-muted" style={{ cursor: 'zoom-in' }} onClick={() => setShowEnlargedMap(true)}>
-              Click to enlarge
-            </small>
-          </div>
+        <CCardBody className="p-0">
           <div onClick={() => setShowEnlargedMap(true)} style={{ cursor: 'zoom-in' }}>
             <SvgFloorPlan 
               selectedRoom={selectedRoom}
@@ -83,8 +78,14 @@ function App() {
         fullscreen
         className="enlarged-map-modal"
       >
-        <CModalHeader closeButton className="bg-dark text-white border-0">
+        <CModalHeader className="bg-dark text-white border-0">
           <h5 className="mb-0">Meeting Rooms Floor Plan</h5>
+          <button 
+            type="button" 
+            className="btn-close btn-close-white" 
+            onClick={() => setShowEnlargedMap(false)}
+            aria-label="Close"
+          />
         </CModalHeader>
         <CModalBody className="p-3" style={{ background: '#f8f9fa', maxHeight: '90vh', overflow: 'auto' }}>
           <div style={{ transform: 'scale(1.5)', transformOrigin: 'top center', padding: '20px' }}>
@@ -101,7 +102,7 @@ function App() {
 
       {/* Footer */}
       <div className="text-center mt-4">
-        <small className="text-muted">Meeting Rooms v6.1.2</small>
+        <small className="text-muted">Meeting Rooms v6.2.0</small>
       </div>
     </CContainer>
   )
