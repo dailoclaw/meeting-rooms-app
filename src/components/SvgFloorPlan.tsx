@@ -39,7 +39,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
         border: '2px solid #495057',
       }}
     >
-      {/* Embedded original floor plan image */}
+      {/* Embedded original floor plan image - shows everything as-is */}
       <image
         href="/meeting-rooms-map.jpg"
         width="944"
@@ -47,7 +47,7 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
         preserveAspectRatio="none"
       />
       
-      {/* Interactive room markers overlaid on the image */}
+      {/* Invisible clickable areas over each room */}
       {rooms.map(room => {
         const coords = roomCoordinates[room.id]
         if (!coords) return null
@@ -61,60 +61,60 @@ export default function SvgFloorPlan({ selectedRoom, onRoomSelect, rooms }: SvgF
             onClick={() => onRoomSelect(room)}
             style={{ cursor: 'pointer' }}
           >
-            {/* Clickable circle marker */}
+            {/* Invisible clickable circle - just for interaction */}
             <circle
               cx={x}
               cy={y}
-              r={isSelected ? 28 : 22}
-              fill={isSelected ? 'rgba(255, 193, 7, 0.7)' : 'rgba(255, 193, 7, 0.3)'}
-              stroke={isSelected ? '#ff9800' : '#ffc107'}
-              strokeWidth={isSelected ? 3 : 2}
+              r={30}
+              fill="transparent"
+              stroke="none"
             />
             
-            {/* Room number */}
-            <text
-              x={x}
-              y={y}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={isSelected ? 18 : 16}
-              fontWeight="bold"
-              fill="#000"
-              pointerEvents="none"
-            >
-              {room.id}
-            </text>
-            
-            {/* Tooltip on hover/selection */}
+            {/* Tooltip popup - only shown when selected */}
             {isSelected && (
               <g>
+                {/* Tooltip background */}
                 <rect
-                  x={x - 60}
-                  y={y - 50}
-                  width="120"
-                  height="30"
-                  fill="rgba(0, 0, 0, 0.8)"
+                  x={x - 70}
+                  y={y - 60}
+                  width="140"
+                  height="45"
+                  fill="rgba(0, 0, 0, 0.85)"
                   stroke="#ffc107"
                   strokeWidth="2"
-                  rx="4"
+                  rx="6"
                 />
+                {/* Room number */}
                 <text
                   x={x}
                   y={y - 42}
                   textAnchor="middle"
-                  fontSize="11"
-                  fill="white"
+                  fontSize="13"
+                  fill="#ffc107"
                   fontWeight="bold"
+                  pointerEvents="none"
+                >
+                  Room #{room.id}
+                </text>
+                {/* Room name */}
+                <text
+                  x={x}
+                  y={y - 27}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fill="white"
+                  fontWeight="600"
                   pointerEvents="none"
                 >
                   {room.name}
                 </text>
+                {/* Capacity */}
                 <text
                   x={x}
-                  y={y - 28}
+                  y={y - 13}
                   textAnchor="middle"
                   fontSize="10"
-                  fill="#ffc107"
+                  fill="#adb5bd"
                   pointerEvents="none"
                 >
                   👥 Capacity: {room.capacity}
